@@ -1,0 +1,373 @@
+package comp1140.ass2;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+//entire class written by Fangqin Chen -u5552738
+
+public class PlayerTest extends JFXTest {
+	ArrayList<Card> h = new ArrayList<Card>();
+	ArrayList<Card> rS = new ArrayList<Card>();
+	ArrayList<Card> rC = new ArrayList<Card>();
+	ArrayList<Card> rD = new ArrayList<Card>();
+	ArrayList<Card> rH = new ArrayList<Card>();
+	boolean cP;
+	boolean cD;
+	ArrayList<Card> dpH = new ArrayList<Card>();
+	ArrayList<Card> dpS = new ArrayList<Card>();
+	ArrayList<Card> dpC = new ArrayList<Card>();
+	ArrayList<Card> dpD = new ArrayList<Card>();
+	ArrayList<Card> deck = new ArrayList<Card>();
+	Table table = new Table(dpH,dpS,dpC,dpD,deck);
+	int count;
+	
+	
+	public boolean has(ArrayList<Card> pile, Card c){
+		for (int i = 0; i < pile.size(); i++){
+			if (pile.get(i).compareTo(c)==0){
+				return true;
+			}
+		}return false;
+	}
+
+	
+	@Test //returns turn when play can draw and the chosen pile is from table
+	 public void testCheckDraw1() throws InterruptedException {
+	   runJFXTest(new Runnable() {
+	     @Override
+	     public void run() { 
+	    	dpH.add(new Card('6','H'));
+	 		dpH.add(new Card('4','H'));
+	 		cD = true;
+	 		ArrayList<Card> cs = new ArrayList<Card>();
+	 		cs.add(new Card('6','H'));
+	 		cs.add(new Card('4','H'));
+	 		Player p1 = new Player(h, rS, rC, rD,rH,cP,cD, count);
+	 		assertTrue(p1.checkDraw(cs, table));
+	 		endOfJFXTest();
+	     }
+	     
+	   });}
+		
+		
+	@Test //checkDraw returns false if canDraw is false
+	public void testCheckDraw2() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+			    	dpH.add(new Card('6','H'));
+			 		dpH.add(new Card('4','H'));
+			 		cD = false;
+			 		ArrayList<Card> cs = new ArrayList<Card>();
+			 		cs.add(new Card('6','H'));
+			 		cs.add(new Card('4','H'));
+			 		Player p1 = new Player(h, rS, rC, rD,rH,cP,cD,count);
+			 		assertFalse(p1.checkDraw(cs, table));
+			 		endOfJFXTest();
+			     }
+			     
+			   });}
+	
+	@Test //checkDraw returns false for empty pile
+	public void testCheckDraw3() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+			    	cD = true;
+			 		ArrayList<Card> cs = new ArrayList<Card>();
+			 		Player p1 = new Player(h, rS, rC, rD,rH,cP,cD,count);
+			 		assertFalse(p1.checkDraw(cs, table));
+			 		endOfJFXTest();
+			     }
+			     
+			   });}
+	
+	@Test //CheckPlay returns false if card is not from hand
+	public void testCheckPlay1()throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+			    	cP = true;
+			 		cD = false;
+			 		rS.add(new Card('6','S'));
+			 		rS.add(new Card('4','S'));
+			 		h.add(new Card('7','H'));
+			 		h.add(new Card('A','H'));
+			 		h.add(new Card('2','D'));
+			 		h.add(new Card('7','C'));
+			 		ArrayList<Card> cs = new ArrayList<Card>();
+			 		cs.add(new Card('6','S'));
+			 		cs.add(new Card('4','S'));
+			 		Card c = new Card('7','S');
+			 		Player p1 = new Player(h, rS,rC,rD,rH,cP,cD,count);
+			 		assertFalse(p1.checkPlay(c,cs,table));
+			 		endOfJFXTest();
+			     }
+			     
+			   });}
+	
+	@Test //CheckPlay returns false if canPlay is false
+	public void testCheckPlay2() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+			    	cP = false;
+			 		cD = false;
+			 		rS.add(new Card('6','S'));
+			 		rS.add(new Card('4','S'));
+			 		h.add(new Card('7','S'));
+			 		h.add(new Card('A','H'));
+			 		h.add(new Card('2','D'));
+			 		h.add(new Card('7','C'));
+			 		ArrayList<Card> cs = new ArrayList<Card>();
+			 		cs.add(new Card('6','S'));
+			 		cs.add(new Card('4','S'));
+			 		Card c = new Card('7','S');
+			 		Player p1 = new Player(h, rS,rC,rD,rH,cP,cD,count);
+			 		assertFalse(p1.checkPlay(c,cs,table));
+			 		endOfJFXTest();
+			     }
+			     
+			   });} 
+		
+	
+	@Test //CheckPlay returns false if canDraw is true
+	public void testCheckPlay3() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+			    	cP = true;
+			 		cD = true;
+			 		rS.add(new Card('6','S'));
+			 		rS.add(new Card('4','S'));
+			 		Card c = new Card('7','S');
+			 		h.add(c);
+			 		h.add(new Card('A','H'));
+			 		h.add(new Card('2','D'));
+			 		h.add(new Card('7','C'));
+			 		ArrayList<Card> cs = new ArrayList<Card>();
+			 		cs.add(new Card('6','S'));
+			 		cs.add(new Card('4','S'));
+			 		
+			 		Player p1 = new Player(h, rS,rC,rD,rH,cP,cD,count);
+			 		assertFalse(p1.checkPlay(c,cs,table));
+			 		endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test //CheckPlay returns True for the correctly adding a card to a run
+	public void testCheckPlay4() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+					cP = true;
+					cD = false;
+					rS.add(new Card('6','S'));
+					rS.add(new Card('4','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					Card c = new Card('7','S');
+					h.add(c);
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					Table t = new Table(cs, null,null ,null ,null);
+					
+					System.out.println(p1.checkPlay(c,cs,t));
+					assertTrue(p1.checkPlay(c,cs,t));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	@Test //CheckPlay returns True for the correctly adding a card to a discard pile
+	public void testCheckPlay5() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+					cP = true;
+					cD = false;
+					dpS.add(new Card('6','S'));
+					dpS.add(new Card('4','S'));
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Card c = new Card('7','S');
+					h.add(c);
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					Table t = new Table(cs, null,null ,null ,null);
+					assertTrue(p1.checkPlay(c,cs,t));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test //CheckPlay returns false if chosen pile is not run/discard pile
+	public void testCheckPlay6() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+					cP = true;
+					cD = false;
+					deck.add(new Card('6','S'));
+					deck.add(new Card('4','S'));
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Card c = new Card('7','S');
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					assertFalse(p1.checkPlay(c,cs,table));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test //CheckPlay returns false when adding a card to a run with incorrect order
+	public void testCheckPlay7() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+					cP = true;
+					cD = false;
+					rS.add(new Card('6','S'));
+					rS.add(new Card('4','S'));
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Card c = new Card('5','S');
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					assertFalse(p1.checkPlay(c,cs,table));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test //CheckPlay returns False when card and chosen pile have different suits
+	public void testCheckPlay8() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() {
+					cP = true;
+					cD = false;
+					rS.add(new Card('6','S'));
+					rS.add(new Card('4','S'));
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Card c = new Card('7','C');
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					assertFalse(p1.checkPlay(c,cs,table));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test //CheckPlay returns True when chosen pile is empty
+	public void testCheckPlay9() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() { 
+					cP = true;
+					cD = false;
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					ArrayList<Card> cs = new ArrayList<Card>();
+					Card c = new Card('7','C');
+					h.add(c);
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					Table t = new Table(cs, null,null,null,null);
+					assertTrue(p1.checkPlay(c,cs,t));
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test
+	public void testDoDraw() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() {
+					cD = true;
+					deck.add(new Card('6','S'));
+					deck.add(new Card('4','S'));
+					ArrayList<Card> deck_copy = deck;
+					h.add(new Card('7','S'));
+					h.add(new Card('A','H'));
+					h.add(new Card('2','D'));
+					h.add(new Card('7','C'));
+					int size = h.size();
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					p1.doDraw(cs,table);
+					assertFalse(p1.canDraw);//check player now can't draw
+					assertTrue(cs.size()==deck_copy.size()-1); //check the size of the chosen pile
+					assertTrue(p1.hand.size()== size + 1); //check the size of hand has increased
+					assertTrue(has(p1.hand,deck_copy.get(0))); //check the drawn card is added to hand
+					assertFalse(has(cs,deck_copy.get(0))); // check the drawn card is removed from pile
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+	
+	@Test
+	public void testDoPlay1() throws InterruptedException {
+		   runJFXTest(new Runnable() {
+			     @Override
+			     public void run() {
+					cD = false;
+					cP = true;
+					Card a = new Card('7','S');
+					Card b = new Card('A','H');
+					Card c = new Card('2','D');
+					Card d = new Card('7','C');
+					h.add(a);
+					h.add(b);
+					h.add(c);
+					h.add(d);
+					int size= h.size();
+					rS.add(new Card('6','S'));
+					rS.add(new Card('4','S'));
+					ArrayList<Card> rS_copy = rS;
+					ArrayList<Card> cs = new ArrayList<Card>();
+					cs.add(new Card('6','S'));
+					cs.add(new Card('4','S'));
+					Player p1 = new Player(h,rS,rC,rD,rH,cP,cD,count);
+					System.out.println(p1.toString());
+					p1.doPlay(a,cs);
+					System.out.println(p1.toString());
+					assertTrue(cs.size()==rS_copy.size()+1);//check if size of the chosen pile has increased
+					assertTrue(p1.hand.size() == size -1 ); //check if size of hand decrease;
+					assertFalse(p1.canPlay); //check if p1 can not play a card;
+					assertTrue(cs.get(0)==a); //check if the chosen card is added to the front of the chosen pile
+					endOfJFXTest();
+			     }
+			     
+			   });} 
+		
+	
+
+}
